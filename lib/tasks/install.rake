@@ -13,6 +13,6 @@ namespace :slim_select do
 
     puts "Reference CSS in layout"
     puts "Please reference the CSS at an appropriate point in your application layout:"
-    puts '<%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>'
+    puts '<%= stylesheet_link_tag "slimselect", "data-turbo-track": "reload" %>'
   end
 end
