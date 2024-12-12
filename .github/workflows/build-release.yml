@@ -1,0 +1,35 @@
+name: Build release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  push_gem:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3
+          bundler-cache: true
+      - name: Build gem
+        run: |
+          VERSION=$(curl https://ga.jspm.io/npm:slim-select)
+          curl https://ga.jspm.io/npm:slim-select@${VERSION}/dist/slimselect.min.js \
+            -o vendor/assets/javascript/slimselect.min.js
+          curl https://ga.jspm.io/npm:slim-select@${VERSION}/dist/slimselect.css \
+            -o vendor/assets/stylesheets/slimselect.css
+          sed -i "s/  VERSION = */VERSION = \"${VERSION}\"/" lib/slim_select_rails/version.rb
+          git config --global user.name "Automated Release"
+          git config --global user.email "tsvallender@users.noreply.github.com"
+          git commit -am "Release ${VERSION}"
+          git push
+      - name: Push gem
+        uses: rubygems/release-gem@v1
