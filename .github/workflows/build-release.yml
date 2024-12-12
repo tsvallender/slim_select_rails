@@ -26,10 +26,11 @@ jobs:
             -o vendor/assets/javascript/slimselect.min.js
           curl https://ga.jspm.io/npm:slim-select@${VERSION}/dist/slimselect.css \
             -o vendor/assets/stylesheets/slimselect.css
-          sed -i "s/  VERSION = */VERSION = \"${VERSION}\"/" lib/slim_select_rails/version.rb
+          sed -i "s/  VERSION = .*$/  VERSION = \"${VERSION}\"/" lib/slim_select_rails/version.rb
           git config --global user.name "Automated Release"
           git config --global user.email "tsvallender@users.noreply.github.com"
-          git commit -am "Release ${VERSION}"
+          git add vendor/assets lib/slim_select_rails/version.rb
+          git commit -m "Release ${VERSION}"
           git push
       - name: Push gem
         uses: rubygems/release-gem@v1
